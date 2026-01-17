@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>saneboystory</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #050816;
+      color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(12px);
+      background: rgba(5, 8, 22, 0.9);
+      z-index: 10;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 18px;
+    }
+
+    .logo span {
+      color: #7c3aed;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: #a1a1aa;
+    }
+
+    main {
+      flex: 1;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 800px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #111827, #020617);
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 18px 18px 20px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8);
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .card p.sub {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #e5e7eb;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      color: #f9fafb;
+      padding: 9px 11px;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 40px;
+      outline: none;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    textarea {
+      min-height: 120px;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.6);
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      background: linear-gradient(135deg, #7c3aed, #22c55e);
+      color: #f9fafb;
+      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.5);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 16px 40px rgba(124, 58, 237, 0.7);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+    }
+
+    .story-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .story {
+      padding: 10px 11px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      cursor: pointer;
+      transition: border 0.15s ease, background 0.15s ease, transform 0.1s ease;
+    }
+
+    .story:hover {
+      border-color: #7c3aed;
+      background: rgba(15, 23, 42, 1);
+      transform: translateY(-1px);
+    }
+
+    .story-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .story-meta {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .story-preview {
+      font-size: 12px;
+      color: #e5e7eb;
+      margin-top: 4px;
+      max-height: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .comments {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .comment {
+      padding: 8px 9px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .comment-author {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .comment-text {
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+    }
+
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: #6b7280;
+      padding: 10px 0 16px;
+    }
+
+    footer span {
+      color: #a855f7;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="logo"><span>sane</span>boystory</div>
+      <div class="tagline">short stories · real feelings · shared out loud</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left: write a story -->
+    <section class="card">
+      <div class="pill">
+        <span class="pill-dot"></span>
+        live draft · not yet saved
+      </div>
+      <h2>Write a new story</h2>
+      <p class="sub">Drop your short story here. One page of honesty is better than a hundred pages of pretending.</p>
+
+      <form onsubmit="event.preventDefault(); alert('On a real server this would publish your story. For now it’s just a demo.');">
+        <div class="field">
+          <label for="story-title">Title</label>
+          <input id="story-title" type="text" placeholder="e.g. The Night I Finally Slept" />
+        </div>
+
+        <div class="field">
+          <label for="story-author">Your name</label>
+          <input id="story-author" type="text" placeholder="saneboy, anonymous, whatever feels right" />
+        </div>
+
+        <div class="field">
+          <label for="story-body">Story</label>
+          <textarea id="story-body" placeholder="Write your short story here..."></textarea>
+        </div>
+
+        <button type="submit">Post story (demo)</button>
+      </form>
+    </section>
+
+    <!-- Right: stories + comments -->
+    <section class="card">
+      <h2>Latest story</h2>
+      <p class="sub">Click a story on the left (in the future). For now, here’s a sample one.</p>
+
+      <div class="story">
+        <div class="story-title">The Night I Finally Slept</div>
+        <div class="story-meta">by saneboy · 3 min read</div>
+        <div class="story-preview">
+          I thought the world would end if I slowed down. Then I did nothing for one night, and somehow I was still here in the morning...
+        </div>
+      </div>
+
+      <h3 style="font-size: 14px; margin-top: 14px; margin-bottom: 6px;">Comments</h3>
+      <div class="comments">
+        <div class="comment">
+          <div class="comment-author">someone</div>
+          <div class="comment-text">this feels too real. write more.</div>
+        </div>
+        <div class="comment">
+          <div class="comment-author">quietreader</div>
+          <div class="comment-text">saved this. it’s exactly how my week felt.</div>
+        </div>
+      </div>
+
+      <form style="margin-top: 10px;"
+        onsubmit="event.preventDefault(); alert('In a real version, this would add your comment. Right now it’s just a front-end.');">
+        <div class="field">
+          <label for="comment-name">Name</label>
+          <input id="comment-name" type="text" placeholder="your name or anonymous" />
+        </div>
+        <div class="field">
+          <label for="comment-text">Comment</label>
+          <textarea id="comment-text" placeholder="what did this story make you feel?"></textarea>
+        </div>
+        <button type="submit">Post comment (demo)</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    saneboystory · built to hold the stories you don’t say out loud · <span>v0.1</span>
+  </footer>
+</body>
+</html>
